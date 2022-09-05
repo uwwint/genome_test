@@ -168,9 +168,9 @@ class NfSchema {
                 switch(schemaKey) {
                     case 'format':
                         if (schemaValue == 'directory-path' || schemaValue == 'file-path') {
-                            File path = new File(paramValue)
-                            assert path.exists() : 
-                            "${red}ERROR: Directory '${paramValue}' does not exist (passed to '--${key}')${reset}"
+                            //File path = new File(paramValue)
+                            //assert path.exists() : 
+                            //"${red}ERROR: Directory '${paramValue}' does not exist (passed to '--${key}')${reset}"
                         }
                         break;
                     case 'valid':
