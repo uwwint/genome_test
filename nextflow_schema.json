@@ -42,7 +42,7 @@
         "profile": {
           "type": "string",
           "description": "Which pipeline profiles to use to execute the pipeline.",
-          "valid": ["standard", "phoenix", "afw", "gadi", "conda"],
+          "valid": ["standard", "phoenix", "afw", "gadi", "conda","aws"],
           "optional": false
         },
         "resume": {
