@@ -3,7 +3,6 @@ process hifiadapterfilt {
     publishDir "${outdir}/adapter-removed-reads", mode: 'copy'
     label "hififilter"
 
-    conda.cacheDir = "/home/ec2-user/conda/cache"
     conda "$projectDir/conf/hifiadapterfilt.yaml"
 
     input:
