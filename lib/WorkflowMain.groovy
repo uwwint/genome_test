@@ -157,7 +157,7 @@ class WorkflowMain {
         }
 
         // Validate parameters
-        def checkedArgs = NfSchema.validateParameters(parameters, wrkflow)
+        //def checkedArgs = NfSchema.validateParameters(parameters, wrkflow)
 
         // Print the user provided arguments to screen
         summaryArguments(checkedArgs, wrkflow)
