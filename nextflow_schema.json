@@ -32,36 +32,6 @@
         "pipeline"
       ]
     },
-    "nf_arguments": {
-      "title": "Nextflow Arguments",
-      "description": 
-        "These are recommended Nextflow-specific arguments relating to the execution of Nextflow itself. Notice the use of single hyphens when calling these arguments!",
-      "type": "object",
-      "default": "",
-      "properties": {
-        "profile": {
-          "type": "string",
-          "description": "Which pipeline profiles to use to execute the pipeline.",
-          "enum": ["standard", "phoenix", "afw", "gadi", "conda","aws"]
-        },
-        "resume": {
-          "type": "boolean",
-          "description": "Should the workflow be resumed."
-        },
-        "work-dir": {
-          "type": "string",
-          "description": "Working directory name."
-        },
-        "with-notification": {
-          "type": "string",
-          "description": "Email to send a workflow execution email to - success/failure notification."
-        }
-      },
-      "required": [
-        "profile",
-        "work-dir"
-      ]
-    },
     "cluster": {
       "title": "Cluster Arguments",
       "description": "Arguments for running jobs on HPC clusters (ignore if '-profile standard'):",
@@ -366,9 +336,6 @@
   "anyOf": [
     {
       "$ref": "#/definitions/mandatory"
-    },
-    {
-      "$ref": "#/definitions/nf_arguments"
     },
     {
       "$ref": "#/definitions/cluster"
