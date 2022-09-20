@@ -1,4 +1,5 @@
 process pin_hic {
+    container "australianbiocommons/pin_hic"
     tag { id }
     publishDir "${outdir}/assembly-scaffold/pin_hic-${id}", mode: 'copy', pattern: "*.{fa,wig,sat,mat,agp}"
     label "pinhic"
