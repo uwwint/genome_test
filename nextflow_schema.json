@@ -1,364 +1,395 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://raw.githubusercontent.com/YOUR_PIPELINE/master/nextflow_schema.json",
   "version": "0.0.1",
   "title": "NF-PIPELINES",
-  "description": [
-    "This repository houses a collection of workflows I have developed over the",
-    "course of my PhD. They are typically related to analyses that I needed to carry",
-    "out at some point or another. Feel free to try them out, adapt them or even use",
-    "them as a guide for your own custom pipelines."
-  ],
+  "description": "This repository houses a collection of workflows I have developed over the course of my PhD. They are typically related to analyses that I needed to carry out at some point or another. Feel free to try them out, adapt them or even use them as a guide for your own custom pipelines.",
   "definitions": {
     "mandatory": {
       "title": "Mandatory Arguments",
       "description": "These options MUST be provided to run the pipeline:",
-      "arguments": {
+      "type": "object",
+      "default": "",
+      "properties": {
         "outdir": {
           "type": "string",
           "format": "directory-path",
-          "description": "Path to the output directory where the results will be saved.",
-          "optional": false
+          "description": "Path to the output directory where the results will be saved."
         },
         "out_prefix": {
           "type": "string",
-          "description": "Prefix for output files and/or directories.",
-          "optional": false
+          "description": "Prefix for output files and/or directories."
         },
         "pipeline": {
           "type": "string",
           "description": "Specification of which sub-workflow to run.",
-          "valid": ["qc", "assembly", "assembly_assessment", "alignment", "consensus", "codeml"],
-          "optional": false
+          "valid": ["qc", "assembly", "assembly_assessment", "alignment", "consensus", "codeml"]
         }
-      }
+      },
+      "required": [
+        "outdir",
+        "out_prefix",
+        "pipeline"
+      ]
     },
     "nf_arguments": {
       "title": "Nextflow Arguments",
-      "description": [
-        "These are recommended Nextflow-specific arguments relating to the", 
-        "execution of Nextflow itself. Notice the use of single hyphens when",
-        "calling these arguments!"
-      ],
-      "arguments": {
+      "description": 
+        "These are recommended Nextflow-specific arguments relating to the execution of Nextflow itself. Notice the use of single hyphens when calling these arguments!",
+      "type": "object",
+      "default": "",
+      "properties": {
         "profile": {
           "type": "string",
           "description": "Which pipeline profiles to use to execute the pipeline.",
-          "valid": ["standard", "phoenix", "afw", "gadi", "conda","aws"],
-          "optional": false
+          "enum": ["standard", "phoenix", "afw", "gadi", "conda","aws"]
         },
         "resume": {
           "type": "boolean",
-          "description": "Should the workflow be resumed.",
-          "optional": true
+          "description": "Should the workflow be resumed."
         },
         "work-dir": {
           "type": "string",
-          "description": "Working directory name.",
-          "optional": false
+          "description": "Working directory name."
         },
         "with-notification": {
           "type": "string",
-          "description": "Email to send a workflow execution email to - success/failure notification.",
-          "optional": true
+          "description": "Email to send a workflow execution email to - success/failure notification."
         }
-      }
+      },
+      "required": [
+        "profile",
+        "work-dir"
+      ]
     },
     "cluster": {
       "title": "Cluster Arguments",
       "description": "Arguments for running jobs on HPC clusters (ignore if '-profile standard'):",
-      "arguments": {
+      "type": "object",
+      "default": "",
+      "properties": {
         "partition": {
           "type": "string",
           "description": "Which job-queue to submit to submit jobs to.",
-          "valid": {
-            "phoenix": ["skylake", "skylakehm", "test"],
-            "gadi": [ "normal" ],
-            "afw": [ "afw" ],
-            "standard": [ false ]
-          },
-          "optional": true
+          "enum": ["skylake", "skylakehm", "test", "normal" , "afw" , false]
         },
         "max_memory": {
-          "type": "memoryUnit",
-          "description": "Maximum amount of memory that can be requested. DO NOT TOUCH.",
-          "optional": true
+          "type": "string",
+          "pattern": "^\\d+(\\.\\d+)?\\.?\\s*(K|M|G|T)?B$",
+          "description": "Maximum amount of memory that can be requested. DO NOT TOUCH."
         },
         "max_cpus": {
           "type": "integer",
-          "description": "Maximum number of CPUs that can be requested. DO NOT TOUCH.",
-          "optional": true
+          "description": "Maximum number of CPUs that can be requested. DO NOT TOUCH."
         },
         "max_time": {
-          "type": "duration",
-          "description": "Maximum amount of time that can be requested. DO NOT TOUCH.",
-          "optional": true
+          "type": "string",
+          "pattern": "^(\\d+\\.?\\s*(s|m|h|day)\\s*)+$",
+          "description": "Maximum amount of time that can be requested. DO NOT TOUCH."
         }
       }
     },
     "qc": {
       "title": "QC pipeline Arguments",
       "description": "Short-read quality control pipeline arguments.",
-      "arguments": {
+      "type": "object",
+      "default": "",
+      "properties": {
         "seqdir": {
           "type": "string",
           "format": "directory-path",
           "pattern":"*_R{1,2}.{fastq,fq}.gz",
           "nfiles": -1,
-          "description": "Directory path containing paired-end short-read FASTQ files.",
-          "optional": false
+          "description": "Directory path containing paired-end short-read FASTQ files."
         },
         "platform": {
           "type": "string",
           "description": "Specify the sequencing platform.",
-          "valid": [[ "illumina", "mgi" ], "single"],
-          "optional": false
+          "enum": [ "illumina", "mgi"]
         },
         "krakendb": {
           "type": "string",
           "format": "directory-path",
-          "description": "Directory path to pre-installed Kraken2 database.",
-          "optional": false
+          "description": "Directory path to pre-installed Kraken2 database."
         },
         "bq_phred": {
           "type": "integer",
-          "description": "Quality value that a base is qualified. Default phread quality >= 15.",
-          "optional": true
+          "description": "Quality value that a base is qualified. Default phread quality >= 15."
         },
         "n_base_limit": {
           "type": "integer",
-          "description": "Number of N's in a read before read-pair is removed. Default is 5",
-          "optional": true
+          "description": "Number of N's in a read before read-pair is removed. Default is 5"
         },
         "average_qual": {
           "type": "integer",
-          "description": "Average quality required by a read to not be filtered out. Default 0 (no minimum avg. quality).",
-          "optional": true
+          "description": "Average quality required by a read to not be filtered out. Default 0 (no minimum avg. quality)."
         },
         "length_required": {
           "type": "integer",
-          "description": "Reads shorter than this length will be discarded. Default is 15.",
-          "optional": true
+          "description": "Reads shorter than this length will be discarded. Default is 15."
         }
-      }
+      },
+      "required": [
+        "seqdir",
+        "platform",
+        "krakendb"
+      ]
     },
     "assembly": {
       "title": "Assembly pipeline options",
       "description": "Genome assembly pipeline arguments.",
-      "arguments": {
+      "type": "object",
+      "default": "",
+      "properties": {
         "hifi": {
           "type": "string",
           "format": "directory-path",
           "pattern": "*.{fastq,fq}.gz",
           "nfiles": 1,
-          "description": "Directory path containing the HiFi Fastq file/s.",
-          "optional": false
+          "description": "Directory path containing the HiFi Fastq file/s."
         },
         "assembly": {
           "type": "string",
           "description": "Which genome assembly output to analyses.",
-          "valid": [[ "primary", "haplotype1", "haplotype2", "haplotypes", "all" ], "single"],
-          "optional": false
+          "enum": [ "primary", "haplotype1", "haplotype2", "haplotypes", "all"]
         },
         "hic": {
           "type": "string",
           "format": "directory-path",
           "pattern": "*_R{1,2}.{fastq,fq}.gz",
           "nfiles": 2,
-          "description": "Directory path containing the Hi-C Fastq files.",
-          "optional": true
+          "description": "Directory path containing the Hi-C Fastq files."
         },
         "scaffolder": {
           "type": "string",
           "description": "Which scaffolding software to use",
-          "valid": [[ "pin_hic", "salsa2", "all" ], "single"],
-          "optional": false
+          "enum": [ "pin_hic", "salsa2", "all" ]
         },
         "busco_db": {
           "type": "string",
-          "description": "Directory path to a pre-downloaded BUSCO database.",
-          "optional": false
+          "format": "file-path",
+          "description": "Directory path to a pre-downloaded BUSCO database."
         }
-      }
+      },
+      "required": [
+        "hifi",
+        "assembly",
+        "scaffolder",
+        "busco_db"
+      ]
     },
     "assembly_assessment": {
       "title": "Assembly assessment options ",
       "description": "Genome assembly assessment arguments.",
-      "arguments": {
+      "type": "object",
+      "default": "",
+      "properties": {
         "reviewed_assembly": {
           "type": "string",
           "format": "directory-path",
           "pattern": "*.review.assembly",
           "nfiles": 1,
-          "description": "Directory path containing the Juicebox-edited assembly files (should contain '<id>.review.assembly' files).",
-          "optional": false
+          "description": "Directory path containing the Juicebox-edited assembly files (should contain '<id>.review.assembly' files)."
         },
         "contig": {
           "type": "string",
           "format": "directory-path",
           "pattern": "*.fa",
           "nfiles": 1,
-          "description": "Directory path containing the Hifiasm contig output as generated by the 'assembly' pipeline.",
-          "optional": false
+          "description": "Directory path containing the Hifiasm contig output as generated by the 'assembly' pipeline."
         },
         "filtered_hifi": {
           "type": "string",
           "format": "directory-path",
           "pattern": "*.fast?.gz",
           "nfiles": 1,
-          "description": "Directory path to adapter-filtered HiFi sequence data generated by the 'assembly' pipeline",
-          "optional": false
+          "description": "Directory path to adapter-filtered HiFi sequence data generated by the 'assembly' pipeline"
         },
         "assembly": {
           "type": "string",
           "description": "Which genome assembly output to analyses.",
-          "valid": [[ "primary", "haplotype1", "haplotype2", "haplotypes", "all" ], "single"],
-          "optional": false
+          "valid": [[ "primary", "haplotype1", "haplotype2", "haplotypes", "all" ], "single"]
         },
         "length": {
           "type": "integer",
-          "description": "Filter scaffolds less than this length.",
-          "optional": true
+          "description": "Filter scaffolds less than this length."
         },
         "busco_db": {
           "type": "string",
-          "description": "Directory path to a pre-downloaded BUSCO database.",
-          "optional": true
+          "description": "Directory path to a pre-downloaded BUSCO database."
         }
-      }
+      },
+      "required": [
+        "reviewed_assembly",
+        "contig",
+        "filtered_hifi",
+        "assembly"
+      ]
     },
     "alignment": {
       "title": "Alignment options",
       "description": "Short-read alignment arguments.",
-      "arguments": {
+      "type": "object",
+      "default": "",
+      "properties": {
         "seqdir": {
           "type": "string",
           "format": "directory-path",
           "pattern": "*_R{1,2}.{fastq,fq}.gz",
           "nfiles": 2,
-          "description": "Directory path to paired-end reads.",
-          "optional": false
+          "description": "Directory path to paired-end reads."
         },
         "sheet": {
           "type": "string",
           "format": "file-path",
-          "description": "CSV file of two columns '<sample.basename>,<reference>'.",
-          "optional": false
+          "description": "CSV file of two columns '<sample.basename>,<reference>'."
         },
         "platform": {
           "type": "string",
           "description": "Specify the sequencing platform.",
-          "valid": [[ "illumina", "mgi" ], "single"],
-          "optional": false
+          "valid": [[ "illumina", "mgi" ], "single"]
         },
         "aligner": {
           "type": "string",
           "description": "Aligner to use for short-read mapping.",
-          "valid": [ [ "bwa2", "minimap2" ], "single" ],
-          "optional": false
+          "valid": [ [ "bwa2", "minimap2" ], "single" ]
         },
         "mapq": {
           "type": "integer",
-          "description": "Minimum mapping quality threshold. Default 10.",
-          "optional": true
+          "description": "Minimum mapping quality threshold. Default 10."
         }
-      }
+      }, 
+      "required": [
+        "seqdir",
+        "sheet",
+        "platform",
+        "aligner"
+      ]
     },
     "consensus": {
       "title": "Consensus options",
       "description": "Consensus pipeline arguments.",
-      "arguments": {
+      "type": "object",
+      "default": "",
+      "properties": {
         "bamdir": {
           "type": "string",
           "format": "directory-path",
           "pattern": "*.bam",
           "nfiles": 1,
-          "description": "Directory path to BAM files.",
-          "optional": false
+          "description": "Directory path to BAM files."
         },
         "sheet": {
           "type": "string",
           "format": "file-path",
-          "description": "CSV file of two columns '<bam.basename>,<reference>'.",
-          "optional": false
+          "description": "CSV file of two columns '<bam.basename>,<reference>'."
         },
         "mapq": {
           "type": "integer",
-          "description": "Mapping quality applied at 'mpileup'. Default: 10.",
-          "optional": true
+          "description": "Mapping quality applied at 'mpileup'. Default: 10."
         },
         "baseq": {
           "type": "integer",
-          "description": "Base quality applied at 'mpileup'. Default: 10.",
-          "optional": true
+          "description": "Base quality applied at 'mpileup'. Default: 10."
         },
         "ploidy": {
           "type": "integer",
-          "description": "Ploidy of the organism. Default: 2",
-          "optional": true
+          "description": "Ploidy of the organism. Default: 2"
         },
         "mpileup_opt": {
           "type": "string",
-          "description": "Optional arguments to pass to 'bcftools filter'. Provide within single quotes.",
-          "optional": true
+          "description": "Optional arguments to pass to 'bcftools filter'. Provide within single quotes."
         },
         "call_opt": {
           "type": "string",
-          "description": "Optional arguments to pass to 'bcftools filter'. Provide within single quotes.",
-          "optional": true
+          "description": "Optional arguments to pass to 'bcftools filter'. Provide within single quotes."
         },
         "filter_opt": {
           "type": "string",
-          "description": "Optional arguments to pass to 'bcftools filter'. Default: '--SnpGap 10'.",
-          "optional": true
+          "description": "Optional arguments to pass to 'bcftools filter'. Default: '--SnpGap 10'."
         },
         "view_opt": {
           "type": "string",
-          "description": "Optional arguments to pass to 'bcftools view'. Default: '--exclude-types indels'.",
-          "optional": true
+          "description": "Optional arguments to pass to 'bcftools view'. Default: '--exclude-types indels'."
         },
         "norm_opt": {
           "type": "string",
-          "description": "Optional arguments to pass to 'bcftools norm'. Default: '-m +any'.",
-          "optional": true
+          "description": "Optional arguments to pass to 'bcftools norm'. Default: '-m +any'."
         },
         "sort_opt": {
           "type": "string",
-          "description": "Optional arguments to pass to 'bcftools sort'. Provide within single quotes.",
-          "optional": true
+          "description": "Optional arguments to pass to 'bcftools sort'. Provide within single quotes."
         },
         "consensus_opt": {
           "type": "string",
-          "description": "Optional arguments to pass to 'bcftools consensus'. Default: '-H 1'.",
-          "optional": true
+          "description": "Optional arguments to pass to 'bcftools consensus'. Default: '-H 1'."
         }
-      }
+      }, 
+      "required": [
+        "bamdir",
+        "sheet"
+      ]
     },
     "codeml": {
       "title": "CodeML pipeline options",
       "description": "CodeML pipeline specific arguments:",
-      "arguments": {
+      "type": "object",
+      "default": "",
+      "properties": {
         "msa": {
           "type": "string",
           "format": "directory-path",
           "pattern": "*.{fa,fasta}",
           "nfiles": 1,
-          "description": "Directory path to MSA files. Extension must be '.fa' or '.fasta'.",
-          "optional": false
+          "description": "Directory path to MSA files. Extension must be '.fa' or '.fasta'."
         },
         "tree": {
           "type": "string",
           "format": "file-path",
-          "description": "File path to phylogenetic tree.",
-          "optional": false
+          "description": "File path to phylogenetic tree."
         },
         "models": {
           "type": "string",
           "description": "Which CodeML models to run. Provide as a quoted string separated by spaces.",
-          "valid": [ [ "M0","M1","M2","M3","M4","M5","M6","M7","M8","M8a","M9",
+          "enum": [ [ "M0","M1","M2","M3","M4","M5","M6","M7","M8","M8a","M9",
                      "M10","M11","M12","M13","SLR","fb_anc","bsA","bsA1","bsB",
-                     "bsC","bsD","b_free","b_neut","fb"], "multiple" ],
-          "optional": false
+                     "bsC","bsD","b_free","b_neut","fb"], "multiple" ]
         }
-      }
+      }, 
+      "required": [
+        "msa",
+        "tree",
+        "models"
+      ]
     }
-  }
+  },
+  "anyOf": [
+    {
+      "$ref": "#/definitions/mandatory"
+    },
+    {
+      "$ref": "#/definitions/nf_arguments"
+    },
+    {
+      "$ref": "#/definitions/cluster"
+    },
+    {
+      "$ref": "#/definitions/qc"
+    },
+    {
+      "$ref": "#/definitions/assembly"
+    },
+    {
+      "$ref": "#/definitions/assembly_assessment"
+    },
+    {
+      "$ref": "#/definitions/alignment"
+    },
+    {
+      "$ref": "#/definitions/consensus"
+    },
+    {
+      "$ref": "#/definitions/codeml"
+    }
+  ]
 }
