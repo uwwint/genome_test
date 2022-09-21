@@ -114,7 +114,6 @@
         "hifi": {
           "type": "string",
           "format": "directory-path",
-          "pattern": "*.{fastq,fq}.gz",
           "nfiles": 1,
           "description": "Directory path containing the HiFi Fastq file/s."
         },
