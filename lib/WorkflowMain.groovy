@@ -48,7 +48,9 @@ class WorkflowMain {
     //
     public static void initialise(workflow, params, log) {
         // Print help to screen if required
-        print("help")
+        print("help\n");
+        print(params.help);
+
         if (params.help) {
             log.info help(workflow, params, log)
             System.exit(0)
