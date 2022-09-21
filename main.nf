@@ -15,7 +15,7 @@ Check inputs
 */
 
 // Validate/Help page
- WorkflowMain.initialise(params, workflow)
+ WorkflowMain.initialise(params, workflow, log)
 
 /*
 ################################################################################
