@@ -7,16 +7,16 @@ process hifiadapterfilt {
 
     input:
         tuple val(id), file(reads)
-        val outdir
+        file outdir
     
     output:
-        tuple val(id), path("${id}.filt.fastq.gz"), emit: clean
-        path "${id}.{blocklist,stats}"
+        tuple val(id), file("${reads.getName()}.filt.fastq.gz"), emit: clean
+        path "${reads.getName()}.{blocklist,stats}"
         
     script:
         """
         hifiadapterfilt.sh \
-            -p ${id} \
+            -p ${reads} \
             -t ${task.cpus}
         """
 }
