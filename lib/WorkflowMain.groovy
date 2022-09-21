@@ -48,31 +48,37 @@ class WorkflowMain {
     //
     public static void initialise(workflow, params, log) {
         // Print help to screen if required
+        print("help")
         if (params.help) {
             log.info help(workflow, params, log)
             System.exit(0)
         }
 
+        print("validate params")
         // Validate workflow parameters via the JSON schema
         if (params.validate_params) {
             NfcoreSchema.validateParameters(workflow, params, log)
         }
 
         // Print parameter summary log to screen
-
+        print("params summary")
         log.info paramsSummaryLog(workflow, params, log)
 
         // Check that a -profile or Nextflow config has been provided to run the pipeline
+        print("check confif")
         NfcoreTemplate.checkConfigProvided(workflow, log)
 
+        print("check conda")
         // Check that conda channels are set-up correctly
         if (params.enable_conda) {
             Utils.checkCondaChannels(log)
         }
 
+        print("check aws")
         // Check AWS batch settings
         NfcoreTemplate.awsBatch(workflow, params)
 
+        print("check input")
         // Check input has been provided
         if (!params.input) {
             log.error "Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'"
