@@ -38,10 +38,7 @@ workflow ASSEMBLY {
 
     // HiFi Data
     Channel
-        .fromFilePairs(
-            [ params.hifi.path, params.hifi.pattern].join('/'), 
-            size: params.hifi.nfiles
-        )
+        .fromPath( [params.hifi,'.{fastq,fq}.gz'].join('/'))
         .ifEmpty { exit 1, "HiFi Fastq file channel is empty. Can't find the files..." }
         .set { ch_hifi }
     
@@ -55,8 +52,8 @@ workflow ASSEMBLY {
     if (params.containsKey("hic")) {
         Channel
             .fromFilePairs(
-                [params.hic.path, params.hic.pattern].join('/'),
-                size: params.hic.nfiles
+                [params.hic,'*_R{1,2}_*.{fastq,fq}.gz'],
+                size: 2
             )
             .set { ch_hic }
         
