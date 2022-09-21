@@ -15,7 +15,7 @@ Check inputs
 */
 
 // Validate/Help page
-checkedArgs = WorkflowMain.initialise(params, workflow)
+ WorkflowMain.initialise(params, workflow)
 
 /*
 ################################################################################
@@ -23,15 +23,15 @@ Main workflow
 ################################################################################
 */
 
-include {QC} from './nf-workflows/qc' params(checkedArgs)
-include {ASSEMBLY} from "./nf-workflows/assembly" params(checkedArgs)
-include {ASSEMBLY_ASSESSMENT} from './nf-workflows/assembly_assessment' params(checkedArgs)
-include {ALIGNMENT} from './nf-workflows/alignment' params(checkedArgs)
-include {CONSENSUS} from './nf-workflows/consensus' params(checkedArgs)
-include {CODEML} from './nf-workflows/codeml' params(checkedArgs)
+include {QC} from './nf-workflows/qc'
+include {ASSEMBLY} from "./nf-workflows/assembly"
+include {ASSEMBLY_ASSESSMENT} from './nf-workflows/assembly_assessment'
+include {ALIGNMENT} from './nf-workflows/alignment'
+include {CONSENSUS} from './nf-workflows/consensus'
+include {CODEML} from './nf-workflows/codeml'
 
 workflow {
-    switch(checkedArgs.pipeline) {
+    switch(params.pipeline) {
         case 'qc':
             QC()
             break;
