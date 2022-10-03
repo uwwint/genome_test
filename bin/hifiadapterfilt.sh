@@ -27,6 +27,8 @@ h) echo "Usage: $0 [ -p sequence file Prefix ] [ -l minimum match Length to filt
 esac
 done
 
+echo #Given prefix is: $prefix"
+
 if ((OPTIND == 1))
 then
     printf "No options specified. \nFiltering files in working directory. \n"
