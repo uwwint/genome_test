@@ -38,7 +38,7 @@ workflow ASSEMBLY {
 
     // HiFi Data
     Channel
-        .fromPath( [params.hifi,'*.{fastq,fq}.gz'].join('/'))
+        .fromFilePairs( [params.hifi,'*.{fastq,fq}.gz'].join('/'), size: 1)
         .ifEmpty { exit 1, "HiFi Fastq file channel is empty. Can't find the files..." }
         .set { ch_hifi }
     
