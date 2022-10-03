@@ -42,9 +42,13 @@ workflow ASSEMBLY {
         .ifEmpty { exit 1, "HiFi Fastq file channel is empty. Can't find the files..." }
         .set { ch_hifi }
     
+    ch_hifi.view()
+    
+    
     // HifiAdapterFilt: Remove adapters from HiFi
     hifiadapterfilt(ch_hifi, params.outdir)
 
+    /*
     // FQ2FA: hifi reads
     seqkit_fq2fa(hifiadapterfilt.out.clean, params.outdir)
 
@@ -153,12 +157,12 @@ workflow ASSEMBLY {
                 break;
         }
 
-        /*
-        PIPELINE BREAK: The pipeline should break here for users to edit their genome assemblies.
-        - Might look at adding functionality to just continue with the pipeline? but feel
-          like users should always check and edit their assemblies in Juicebox to ensure no
-          obvious misjoins.
-        */
+        
+        //PIPELINE BREAK: The pipeline should break here for users to edit their genome assemblies.
+        //- Might look at adding functionality to just continue with the pipeline? but feel
+        //  like users should always check and edit their assemblies in Juicebox to ensure no
+        //  obvious misjoins.
+        
 
     } else {
         // Hifiasm: assemble contigs
@@ -194,4 +198,5 @@ workflow ASSEMBLY {
     // Genome size estimation
     kmc(ch_hifi, params.out_prefix, params.outdir)
     genomescope(kmc.out.histo, params.outdir)
+    */
 }

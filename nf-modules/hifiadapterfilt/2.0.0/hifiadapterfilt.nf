@@ -6,7 +6,7 @@ process hifiadapterfilt {
     conda "$projectDir/conf/hifiadapterfilt.yaml"
 
     input:
-        tuple val(id), file(reads)
+        tuple file(reads), value(id)
         file outdir
     
     output:
