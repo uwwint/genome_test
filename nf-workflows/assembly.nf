@@ -40,10 +40,7 @@ workflow ASSEMBLY {
     Channel
         .fromFilePairs( [params.hifi,'*.{fastq,fq}.gz'].join('/'), size: 1)
         .ifEmpty { exit 1, "HiFi Fastq file channel is empty. Can't find the files..." }
-        .set { ch_hifi }
-    
-    ch_hifi.view()
-    
+        .set { ch_hifi }    
     
     // HifiAdapterFilt: Remove adapters from HiFi
     hifiadapterfilt(ch_hifi, params.outdir)
