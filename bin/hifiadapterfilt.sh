@@ -27,7 +27,7 @@ h) echo "Usage: $0 [ -p sequence file Prefix ] [ -l minimum match Length to filt
 esac
 done
 
-echo #Given prefix is: $prefix"
+printf "Given prefix is: $prefix\n"
 
 if ((OPTIND == 1))
 then
