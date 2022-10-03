@@ -28,6 +28,7 @@ esac
 done
 
 printf "Given prefix is: $prefix\n"
+printf "$s" $(ps -p '$$')
 
 if ((OPTIND == 1))
 then
