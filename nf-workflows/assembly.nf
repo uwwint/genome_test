@@ -46,7 +46,7 @@ workflow ASSEMBLY {
     
     
     // HifiAdapterFilt: Remove adapters from HiFi
-    //hifiadapterfilt(ch_hifi, params.outdir)
+    hifiadapterfilt(ch_hifi, params.outdir)
 
     /*
     // FQ2FA: hifi reads
